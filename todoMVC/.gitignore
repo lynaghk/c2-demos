@@ -1,0 +1,4 @@
+.lein*
+target/
+public/style.css
+public/todo.js
