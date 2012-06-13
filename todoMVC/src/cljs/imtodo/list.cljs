@@ -26,7 +26,8 @@
 
 (bind! "#main"
        [:section#main {:style {:display (when-not (seq @core/!todos) "none")}}
-        [:input#toggle-all {:type "checkbox"}]
+        [:input#toggle-all {:type "checkbox"
+                            :properties {:checked (every? :completed? @core/!todos)}}]
         [:label {:for "toggle-all"} "Mark all as complete"]
         [:ul#todo-list (unify
                         (case @core/!filter
@@ -39,7 +40,7 @@
 
 (bind! "#footer"
        [:footer#footer {:style {:display (when-not (seq @core/!todos) "none")}}
-        
+
         (let [items-left (core/todo-count false)]
           [:span#todo-count
            [:strong items-left]
@@ -52,8 +53,8 @@
                    [:a {:class (if (= type @core/!filter) "selected" "")
                         :href (str "#/" (name type))}
                     (capitalize (name type))]]))]
-        
-        
+
+
         [:button#clear-completed
          {:style {:display (when (zero? (core/todo-count true)) "none")}}
          "Clear completed (" (core/todo-count true) ")"]])
@@ -64,6 +65,11 @@
           (fn [d _ e]
             (let [checked? (.-checked (.-target e))]
               (core/check-todo! d checked?))))
+
+(event/on-raw "#toggle-all" :click
+              (fn [e]
+                (let [checked? (.-checked (.-target e))]
+                  (core/check-all! checked?))))
 
 (event/on "#todo-list" ".destroy" :click
           (fn [d] (core/clear-todo! d)))

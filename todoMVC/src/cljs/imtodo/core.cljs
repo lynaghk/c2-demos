@@ -75,6 +75,13 @@
                       t))
                   todos)))))
 
+(defn check-all!
+  "Mark all items as (un)completed."
+  [completed?]
+  (swap! !todos (fn [todos]
+                  (map #(assoc % :completed? completed?)
+                       todos))))
+
 (defn add-todo! [title]
   (swap! !todos conj {:title title :completed? false}))
 
