@@ -83,7 +83,9 @@
                        todos))))
 
 (defn add-todo! [title]
-  (swap! !todos conj {:title title :completed? false}))
+  (let [title (.trim title)]
+    (when (seq title) ;;Don't add empty todos
+      (swap! !todos conj {:title title :completed? false}))))
 
 (defn clear-todo!
   "Remove a single todo from the list."

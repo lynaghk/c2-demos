@@ -59,29 +59,32 @@
          {:style {:display (when (zero? (core/todo-count true)) "none")}}
          "Clear completed (" (core/todo-count true) ")"]])
 
-
+;;;;;;;;;;;;;;;;;;;;;
+;;Todo event handlers
 
 (event/on "#todo-list" ".toggle" :click
           (fn [d _ e]
             (let [checked? (.-checked (.-target e))]
               (core/check-todo! d checked?))))
 
+(event/on "#todo-list" ".destroy" :click
+          (fn [d] (core/clear-todo! d)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;;Control event handlers
+
 (event/on-raw "#toggle-all" :click
               (fn [e]
                 (let [checked? (.-checked (.-target e))]
                   (core/check-all! checked?))))
 
-(event/on "#todo-list" ".destroy" :click
-          (fn [d] (core/clear-todo! d)))
+(event/on-raw "#clear-completed" :click
+              core/clear-completed!)
 
-(event/on-raw "#clear-completed" :click core/clear-completed!)
-
-
-
-(def $todo-input (dom/select "#new-todo"))
-(event/on-raw $todo-input :keypress
-              (fn [e]
-                (when (= :enter (evt->key e))
-                  (let [title (.trim (dom/val $todo-input))]
-                    (core/add-todo! title)
+(let [$todo-input (dom/select "#new-todo")]
+  (event/on-raw $todo-input :keypress
+                (fn [e]
+                  (when (= :enter (evt->key e))
+                    (core/add-todo! (dom/val $todo-input))
                     (dom/val $todo-input "")))))
