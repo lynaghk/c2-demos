@@ -90,4 +90,4 @@
   [todo]
   (swap! !todos
          (fn [todos]
-           (remove #(= todo) todos))))
+           (remove #(= todo %) todos))))
