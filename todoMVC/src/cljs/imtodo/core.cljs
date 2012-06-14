@@ -27,7 +27,9 @@
 ;;Persistence
 (def ls-key "todos-c2")
 (defn save-todos! []
-  (aset js/localStorage ls-key (prn-str @!todos)))
+  (aset js/localStorage ls-key
+        (prn-str (map #(dissoc % :editing?) ;;Don't save editing state
+                      @!todos))))
 
 (defn load-todos! []
   (reset! !todos 
@@ -57,17 +59,24 @@
   []
   (swap! !todos #(remove :completed? %)))
 
+(defn replace-todo! [old new]
+  (swap! !todos
+         (fn [todos]
+           (map (fn [t]
+                  (if (= old t)
+                    new
+                    t))
+                todos))))
+
 (defn check-todo!
   "Mark an item as (un)completed."
   [todo completed?]
-  (let [title (todo :title)]
-    (swap! !todos
-           (fn [todos]
-             (map (fn [t]
-                    (if (= title (t :title))
-                      {:title title :completed? completed?}
-                      t))
-                  todos)))))
+  (replace-todo! todo (assoc todo :completed? completed?)))
+
+(defn edit-todo!
+  "Mark an item as currently being editing"
+  [todo]
+  (replace-todo! todo (assoc todo :editing? true)))
 
 (defn check-all!
   "Mark all items as (un)completed."
@@ -88,13 +97,14 @@
                (not (title-exists? title)))
       (swap! !todos conj {:title title :completed? false}))))
 
+
+
 (defn clear-todo!
   "Remove a single todo from the list."
   [todo]
   (swap! !todos
          (fn [todos]
            (remove #(= todo %) todos))))
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;

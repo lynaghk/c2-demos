@@ -3,12 +3,14 @@
   (:use [c2.core :only [unify]])
   (:require [imtodo.core :as core]
             [c2.dom :as dom]
-            [c2.event :as event]))
+            [c2.event :as event]
+            [clojure.string :as  str]))
 
 
-(defn todo [t]
-  (let [{:keys [completed? title]} t]
-    [:li {:class (when completed? "completed")}
+(defn todo* [t]
+  (let [{:keys [completed? title editing?]} t]
+    [:li {:class (str/join " " [(when completed? "completed")
+                                (when editing? "editing")])}
      [:div.view
       [:input.toggle {:type "checkbox"
                       :properties {:checked completed?}}]
@@ -27,7 +29,7 @@
                           :completed (filter :completed? @core/!todos)
                           ;;default to showing all events
                           @core/!todos)
-                        todo)]])
+                        todo*)]])
 
 
 (bind! "#footer"
@@ -61,6 +63,30 @@
 
 (event/on "#todo-list" ".destroy" :click
           (fn [d] (core/clear-todo! d)))
+
+
+
+;;Editing
+(event/on "#todo-list" :dblclick
+          (fn [d] (core/edit-todo! d)))
+
+(let [edit-todo! (fn [d e]
+                   (let [new-title (dom/val (.-target e))]
+                     (core/replace-todo! d
+                                         (-> d
+                                             (assoc :title new-title)
+                                             (dissoc :editing?)))))]
+
+  (event/on "#todo-list" ".edit" :blur
+            (fn [d _ e]
+              (edit-todo! d e))
+            ;;Blur events don't bubble up the DOM, so we need to tell the listener to grab 'em in the capture phase
+            :capture true)
+
+  (event/on "#todo-list" ".edit" :keypress
+            (fn [d _ e]
+              (when (= :enter (core/evt->key e))
+                (edit-todo! d e)))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
