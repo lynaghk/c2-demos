@@ -6,14 +6,6 @@
             [c2.event :as event]))
 
 
-(defn capitalize [string]
-  (str (.toUpperCase (.charAt string 0))
-       (.slice string 1)))
-
-(defn evt->key [e]
-  (get {13 :enter} (.-keyCode e)))
-
-
 (defn todo [t]
   (let [{:keys [completed? title]} t]
     [:li {:class (when completed? "completed")}
@@ -52,7 +44,7 @@
                   [:li
                    [:a {:class (if (= type @core/!filter) "selected" "")
                         :href (str "#/" (name type))}
-                    (capitalize (name type))]]))]
+                    (core/capitalize (name type))]]))]
 
 
         [:button#clear-completed
@@ -85,6 +77,6 @@
 (let [$todo-input (dom/select "#new-todo")]
   (event/on-raw $todo-input :keypress
                 (fn [e]
-                  (when (= :enter (evt->key e))
+                  (when (= :enter (core/evt->key e))
                     (core/add-todo! (dom/val $todo-input))
                     (dom/val $todo-input "")))))

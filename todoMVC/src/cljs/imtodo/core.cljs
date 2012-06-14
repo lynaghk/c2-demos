@@ -94,3 +94,17 @@
   (swap! !todos
          (fn [todos]
            (remove #(= todo %) todos))))
+
+
+
+;;;;;;;;;;;;;;;;;;;;;
+;;Lil' helpers
+
+(defn capitalize [string]
+  (str (.toUpperCase (.charAt string 0))
+       (.slice string 1)))
+
+(defn evt->key [e]
+  (get {13 :enter} (.-keyCode e)))
+
+
