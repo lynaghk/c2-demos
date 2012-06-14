@@ -44,14 +44,8 @@
 (update-filter!)
 
 
-
-
-
-
-
-
-
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;Query/manipulate todos
 
 (defn todo-count
   ([] (count @!todos))
@@ -82,9 +76,16 @@
                   (map #(assoc % :completed? completed?)
                        todos))))
 
+(defn title-exists?
+  "Is there already a todo with that title?"
+  [title]
+  (some #(= title %)
+        (map :title @!todos)))
+
 (defn add-todo! [title]
   (let [title (.trim title)]
-    (when (seq title) ;;Don't add empty todos
+    (when (and (seq title) ;;Don't add empty todos
+               (not (title-exists? title)))
       (swap! !todos conj {:title title :completed? false}))))
 
 (defn clear-todo!
