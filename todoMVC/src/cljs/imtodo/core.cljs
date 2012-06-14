@@ -8,7 +8,7 @@
 
 (def !todos
   "Todo list, implicitly key'd by :title"
-  (atom [{:title "Something todo" :completed? false}]))
+  (atom []))
 
 (def !filter
   "Which todo items should be displayed: all, active, or completed?"

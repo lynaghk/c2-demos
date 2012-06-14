@@ -42,7 +42,7 @@
 
         (let [items-left (core/todo-count false)]
           [:span#todo-count
-           [:strong items-left]
+           [:b items-left]
            (str " item" (if (= 1 items-left) "" "s") " left")])
 
         [:ul#filters
