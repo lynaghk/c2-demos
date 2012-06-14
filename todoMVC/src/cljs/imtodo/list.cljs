@@ -32,6 +32,8 @@
                                 @core/!todos)
                               todo*)]])
 
+;;If the application state changes, check to see if it's because a todo is being edited.
+;;If so, focus on that input element.
 (add-watch core/!todos :focus-editing
            (fn []
              (if-let [$input (dom/select ".editing input.edit")]

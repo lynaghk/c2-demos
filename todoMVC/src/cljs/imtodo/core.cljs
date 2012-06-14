@@ -15,6 +15,9 @@
   (atom :all))
 
 
+;;;;;;;;;;;;;;;;;;;;;
+;;"Routing"
+
 (defn update-filter!
   "Updates filter according to current location hash"
   []
@@ -23,8 +26,10 @@
 
 (set! (.-onhashchange js/window) update-filter!)
 
+
 ;;;;;;;;;;;;;;;;;;;
 ;;Persistence
+
 (def ls-key "todos-c2")
 (defn save-todos! []
   (aset js/localStorage ls-key
@@ -85,13 +90,13 @@
   (some #(= title %)
         (map :title @!todos)))
 
-(defn add-todo! [title]
+(defn add-todo!
+  "Add a new todo to the list."
+  [title]
   (let [title (.trim title)]
     (when (and (seq title) ;;Don't add empty todos
                (not (title-exists? title)))
       (swap! !todos conj {:title title :completed? false}))))
-
-
 
 (defn clear-todo!
   "Remove a single todo from the list."
@@ -110,5 +115,3 @@
 
 (defn evt->key [e]
   (get {13 :enter} (.-keyCode e)))
-
-
