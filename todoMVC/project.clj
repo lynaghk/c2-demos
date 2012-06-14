@@ -1,9 +1,9 @@
-(defproject timeline "0.0.1-SNAPSHOT"
+(defproject imtodo "0.0.1-SNAPSHOT"
   :description "Todo list."
   :dependencies [[org.clojure/clojure "1.4.0"]
-                 [org.clojure/core.match "0.2.0-alpha9"]
                  [com.keminglabs/c2 "0.2.0-SNAPSHOT"]]
-
+  
+  :min-lein-version "2.0.0"
   :source-paths ["src/clj" "src/cljs"]
 
   :plugins [[lein-cljsbuild "0.2.1"]]
