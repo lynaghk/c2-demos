@@ -37,13 +37,7 @@
             (read-string saved-str)
             [])))
 
-
 (add-watch !todos :save save-todos!)
-
-
-;;Need to run once on page load
-(load-todos!)
-(update-filter!)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

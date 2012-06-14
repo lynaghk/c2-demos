@@ -7,7 +7,9 @@
             [clojure.string :as  str]))
 
 
-(defn todo* [t]
+(defn todo*
+  "Todo item template"
+  [t]
   (let [{:keys [completed? title editing?]} t]
     [:li {:class (str/join " " [(when completed? "completed")
                                 (when editing? "editing")])}
@@ -19,21 +21,24 @@
      [:input.edit {:value title}]]))
 
 (bind! "#main"
-       [:section#main {:style {:display (when-not (seq @core/!todos) "none")}}
+       [:section#main {:style {:display (when (zero? (core/todo-count)) "none")}}
         [:input#toggle-all {:type "checkbox"
                             :properties {:checked (every? :completed? @core/!todos)}}]
         [:label {:for "toggle-all"} "Mark all as complete"]
-        [:ul#todo-list (unify
-                        (case @core/!filter
-                          :active    (remove :completed? @core/!todos)
-                          :completed (filter :completed? @core/!todos)
-                          ;;default to showing all events
-                          @core/!todos)
-                        todo*)]])
+        [:ul#todo-list (unify (case @core/!filter
+                                :active    (remove :completed? @core/!todos)
+                                :completed (filter :completed? @core/!todos)
+                                ;;default to showing all events
+                                @core/!todos)
+                              todo*)]])
 
+(add-watch core/!todos :focus-editing
+           (fn []
+             (if-let [$input (dom/select ".editing input.edit")]
+               (.focus $input))))
 
 (bind! "#footer"
-       [:footer#footer {:style {:display (when-not (seq @core/!todos) "none")}}
+       [:footer#footer {:style {:display (when (zero? (core/todo-count)) "none")}}
 
         (let [items-left (core/todo-count false)]
           [:span#todo-count
@@ -52,6 +57,7 @@
         [:button#clear-completed
          {:style {:display (when (zero? (core/todo-count true)) "none")}}
          "Clear completed (" (core/todo-count true) ")"]])
+
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;Todo event handlers
@@ -72,10 +78,12 @@
 
 (let [edit-todo! (fn [d e]
                    (let [new-title (dom/val (.-target e))]
-                     (core/replace-todo! d
-                                         (-> d
-                                             (assoc :title new-title)
-                                             (dissoc :editing?)))))]
+                     (if (= "" new-title)
+                       (core/clear-todo! d)
+                       (core/replace-todo! d
+                                           (-> d
+                                               (assoc :title new-title)
+                                               (dissoc :editing?))))))]
 
   (event/on "#todo-list" ".edit" :blur
             (fn [d _ e]
