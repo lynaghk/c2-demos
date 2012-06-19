@@ -1,7 +1,6 @@
 (ns imtodo.core
   (:use-macros [c2.util :only [p pp]])
-  (:use [cljs.reader :only [read-string]])
-  (:require [goog.events :as events]))
+  (:use [cljs.reader :only [read-string]]))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;Core application state
