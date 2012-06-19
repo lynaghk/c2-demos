@@ -11,4 +11,5 @@
   :cljsbuild {:builds
               [{:source-path "src/cljs"
                 :compiler {:output-to "public/todo.js"
+                           :pretty-print false
                            :optimizations :advanced}}]})
