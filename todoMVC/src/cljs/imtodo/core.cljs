@@ -58,13 +58,7 @@
   (swap! !todos #(remove :completed? %)))
 
 (defn replace-todo! [old new]
-  (swap! !todos
-         (fn [todos]
-           (map (fn [t]
-                  (if (= old t)
-                    new
-                    t))
-                todos))))
+  (swap! !todos #(replace {old new} %)))
 
 (defn check-todo!
   "Mark an item as (un)completed."
