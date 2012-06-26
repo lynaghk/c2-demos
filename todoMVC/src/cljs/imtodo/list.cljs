@@ -53,7 +53,8 @@
                   [:li
                    [:a {:class (if (= type @core/!filter) "selected" "")
                         :href (str "#/" (name type))}
-                    (core/capitalize (name type))]]))]
+                    (core/capitalize (name type))]])
+                :force-update? true)]
 
 
         [:button#clear-completed
