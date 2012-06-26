@@ -1,6 +1,7 @@
 (ns imtodo.core
   (:use-macros [c2.util :only [p pp]])
-  (:use [cljs.reader :only [read-string]]))
+  (:use [cljs.reader :only [read-string]]
+        [clojure.string :only [blank?]]))
 
 ;;;;;;;;;;;;;;;;;;;;;
 ;;Core application state
@@ -87,8 +88,8 @@
   "Add a new todo to the list."
   [title]
   (let [title (.trim title)]
-    (when (and (seq title) ;;Don't add empty todos
-               (not (title-exists? title)))
+    (when (not (or (blank? title)
+                   (title-exists? title)))
       (swap! !todos conj {:title title :completed? false}))))
 
 (defn clear-todo!
