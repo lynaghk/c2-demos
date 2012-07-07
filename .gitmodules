@@ -1,0 +1,3 @@
+[submodule "manipulate/vendor/himera"]
+	path = manipulate/vendor/himera
+	url = https://github.com/fogus/himera.git
