@@ -1,6 +1,6 @@
 (ns hello-bars.core
-  (:use-macros [c2.util :only [p pp bind!]])
-  (:use [c2.core :only [unify style]])
+  (:use-macros [c2.util :only [bind!]])
+  (:use [c2.core :only [unify]])
   (:require [c2.scale :as scale]))
 
 (bind! "#bars" 
