@@ -1,0 +1,9 @@
+body { background-color:grey;}
+path.millis1 { fill:brown;}
+path.millis2 { fill:pink;}
+path.seconds1 { fill:cornflowerblue;}
+path.seconds2 { fill:blue;}
+path.minutes1 { fill:darkslateblue;}
+path.minutes2 { fill:purple;}
+path.hours1 { fill:navy;}
+path.hours2 { fill:darkorange;}
