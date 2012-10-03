@@ -15,7 +15,7 @@
 (bind! "#clocky" 
   [:svg
     [:g {:transform "translate(300,300)rotate(-90)"}
-      (for [k [:hours :minutes :seconds :millis]]
+      (doall (for [k [:hours :minutes :seconds :millis]]
         (let [v      (get @clock-atom k)
               angle1 (/ (* Tau v) 100)
               angle2 (+ angle1 Pi)
@@ -29,7 +29,7 @@
             [:path {:class (str (name k) "2")
                     :d (arc :outer-radius radius
                             :start-angle angle2
-                            :end-angle   angle3)}]]))]])
+                            :end-angle   angle3)}]])))]])
 
 (defn nextloop []
   (let [d (js/Date.)]
