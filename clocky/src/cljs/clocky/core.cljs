@@ -8,9 +8,9 @@
 
 (def clock-atom
   "clock data bound to atom. each number is a percentage."
-  (atom {"hours" 50, "minutes" 60, "seconds" 70, "millis" 80}))
+  (atom (array-map :hours 50, :minutes 60, :seconds 70, :millis 80)))
 
-(def radii {"hours" 275, "minutes" 200, "seconds" 110, "millis", 30})
+(def radii {:hours 275, :minutes 200, :seconds 110, :millis, 30})
 
 (bind! "#clocky" 
   [:svg
@@ -22,22 +22,22 @@
                     angle3 (+ angle2 Pi)
                     radius (radii label)]
                 [:g.slice
-                  [:path {:class (str label "1")
+                  [:path {:class (str (name label) "1")
                           :d (arc :outer-radius radius
                                   :start-angle angle1
                                   :end-angle   angle2)}]
-                  [:path {:class (str label "2")
+                  [:path {:class (str (name label) "2")
                           :d (arc :outer-radius radius
                                   :start-angle angle2
                                   :end-angle   angle3)}]])))]])
 
 (defn nextloop []
   (let [d (js/Date.)]
-    (reset! clock-atom 
-      {"hours"   (/ (* (rem (.getHours d) 12) 100) 12)
-       "minutes" (/ (* (.getMinutes d) 100) 60)
-       "seconds" (/ (* (.getSeconds d) 100) 60)
-       "millis"  (/ (* (.getMilliseconds d) 100) 1000)})))
+    (reset! clock-atom
+      (array-map :hours   (/ (* (rem (.getHours d) 12) 100) 12)
+                 :minutes (/ (* (.getMinutes d) 100) 60)
+                 :seconds (/ (* (.getSeconds d) 100) 60)
+                 :millis  (/ (* (.getMilliseconds d) 100) 1000)))))
 
 (defn animation-loop []
   (.requestAnimationFrame (dom/getWindow) animation-loop)
