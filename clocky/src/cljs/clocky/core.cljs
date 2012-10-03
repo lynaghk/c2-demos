@@ -32,13 +32,12 @@
                                   :end-angle   angle3)}]])))]])
 
 (defn nextloop []
-  (let [d (js/Date.)
-        h {}
-        h (assoc h "hours"   (/ (* (rem (.getHours d) 12) 100) 12))
-        h (assoc h "minutes" (/ (* (.getMinutes d) 100) 60))
-        h (assoc h "seconds" (/ (* (.getSeconds d) 100) 60))
-        h (assoc h "millis"  (/ (* (.getMilliseconds d) 100) 1000))]
-  (reset! clock-atom h)))
+  (let [d (js/Date.)]
+    (reset! clock-atom 
+      {"hours"   (/ (* (rem (.getHours d) 12) 100) 12)
+       "minutes" (/ (* (.getMinutes d) 100) 60)
+       "seconds" (/ (* (.getSeconds d) 100) 60)
+       "millis"  (/ (* (.getMilliseconds d) 100) 1000)})))
 
 (defn animation-loop []
   (.requestAnimationFrame (dom/getWindow) animation-loop)
